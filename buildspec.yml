@@ -21,11 +21,10 @@ phases:
       - docker push ${REPOSITORY_URI}:latest
       - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
       - echo Writing image definitions file...
-      # Ensure the 'name' matches the container name in your ECS task definition
-      - printf '[{"name":"nodejs-app-service","imageUri":"%s"}]' ${REPOSITORY_URI}:${IMAGE_TAG} > imagedefinitions.json
+      # Replace 'nodejs-mysql-container' with the actual container name from the ECS task definition
+      - printf '[{"name":"nodejs-mysql-container","imageUri":"%s"}]' ${REPOSITORY_URI}:${IMAGE_TAG} > imagedefinitions.json
       - echo Writing task definition file...
-      # If taskdef.json is required, ensure you generate it or reference it correctly
-      # Uncomment and adjust the following line if you have a task definition template
+      # If needed, update the task definition in taskdef.json
       # - cp taskdef-template.json taskdef.json
 
 artifacts:
