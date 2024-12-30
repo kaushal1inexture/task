@@ -1,0 +1,117 @@
+{
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:183631315250:task-definition/nodejs-mysql-app-task:1",
+    "containerDefinitions": [
+        {
+            "name": "nodejs-mysql-app",
+            "image": "183631315250.dkr.ecr.us-east-1.amazonaws.com/assignment/task:latest",
+            "cpu": 1024,
+            "memory": 3072,
+            "memoryReservation": 512,
+            "portMappings": [
+                {
+                    "name": "3000",
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "DB_NAME",
+                    "value": "assignment"
+                },
+                {
+                    "name": "DB_HOST",
+                    "value": "orgtask.ctmy80goy2i2.us-east-1.rds.amazonaws.com"
+                },
+                {
+                    "name": "DB_PORT",
+                    "value": "3306"
+                },
+                {
+                    "name": "DB_USER",
+                    "value": "admin"
+                },
+                {
+                    "name": "DB_PASSWORD",
+                    "value": "admin123&"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/nodejs-mysql-app-task",
+                    "mode": "non-blocking",
+                    "awslogs-create-group": "true",
+                    "max-buffer-size": "25m",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "family": "nodejs-mysql-app-task",
+    "executionRoleArn": "arn:aws:iam::183631315250:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "revision": 1,
+    "volumes": [],
+    "status": "ACTIVE",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "placementConstraints": [],
+    "compatibilities": [
+        "EC2",
+        "FARGATE"
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "registeredAt": "2024-12-30T07:39:33.636Z",
+    "registeredBy": "arn:aws:iam::183631315250:user/assignment",
+    "enableFaultInjection": false,
+    "tags": []
+}
