@@ -1,0 +1,44 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main  # Replace with the branch you want to trigger this workflow on.
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  REPOSITORY_URI: ${{ secrets.ECR_REPOSITORY_URI }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Log in to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build Docker image
+      run: |
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c 1-7)
+        docker build -t $REPOSITORY_URI:latest .
+        docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+
+    - name: Push Docker image
+      run: |
+        docker push $REPOSITORY_URI:latest
+        docker push $REPOSITORY_URI:$IMAGE_TAG
+
+    - name: Save image definitions
+      run: |
+        IMAGE_TAG=$(echo $GITHUB_SHA | cut -c 1-7)
+        printf '[{"name":"nodejs-mysql-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+    - name: Upload imagedefinitions.json
+      uses: actions/upload-artifact@v3
+      with:
+        name: imagedefinitions
+        path: imagedefinitions.json
