@@ -13,16 +13,18 @@ phases:
       - docker build -t ${REPOSITORY_URI}:latest .
       - docker tag ${REPOSITORY_URI}:latest ${REPOSITORY_URI}:${IMAGE_TAG}
 
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker images...
-      - docker push ${REPOSITORY_URI}:latest
-      - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
-      - echo Writing image definitions file...
+post_build:
+  commands:
+    - echo Build completed on `date`
+    - echo Pushing the Docker images...
+    - docker push ${REPOSITORY_URI}:latest
+    - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
+    - echo Writing image definitions file...
+    - echo '[{"name":"nodejs-mysql-app","imageUri":"'"${REPOSITORY_URI}:${IMAGE_TAG}"'"}]' > imagedefinitions.json
       # - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
 artifacts:
   files:
     - '**/*'
     - appspec.yml
+    - imagedefinitions.json
   discard-paths: yes
