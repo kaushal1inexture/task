@@ -4,18 +4,22 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}
+
   build:
     commands:
+      - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t $IMAGE_TAG .
-      - echo Tagging the image with $IMAGE_TAG...
+      - docker build -t ${REPOSITORY_URI}:latest .
       - docker tag ${REPOSITORY_URI}:latest ${REPOSITORY_URI}:${IMAGE_TAG}
+
   post_build:
     commands:
-      - echo Pushing the Docker image to the repository...
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo Updating ECS service with the new image...
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push ${REPOSITORY_URI}:latest
+      - docker push ${REPOSITORY_URI}:${IMAGE_TAG}
+      - echo Writing image definitions file...
       # - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
 artifacts:
   files:
