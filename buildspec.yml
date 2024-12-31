@@ -18,7 +18,7 @@ post_build:
     - echo Build completed on `date`
     - echo Writing image definitions file...
     - echo Writing image definitions file...
-    - printf '[{"name":"'nodejs-mysql-app'","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+    - printf '[{"name":"'nodejs-mysql-app'","imageUri":"'"${REPOSITORY_URI}:${IMAGE_TAG}"'"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
       # - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
