@@ -13,16 +13,3 @@ phases:
       - echo Building the Docker image...
       - docker build -t $REPOSITORY_URI:latest .
       
-  post_build:
-    commands:
-      - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker push $REPOSITORY_URI:latest
-      - echo Writing image definitions file...
-      - printf '[\n  {\n    "name": "%s",\n    "imageUri": "%s"\n  }\n]' "$CONTAINER_NAME" "$REPOSITORY_URI:latest" > imagedefinitions.json
-      - cat imagedefinitions.json
-
-artifacts:
-  files:
-    - imagedefinitions.json
-  discard-paths: yes
