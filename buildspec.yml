@@ -4,21 +4,25 @@ phases:
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}
-
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - echo Logged in successfully
+      
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t ${REPOSITORY_URI}:latest .
-      - docker tag ${REPOSITORY_URI}:latest ${REPOSITORY_URI}:${IMAGE_TAG}
+      - docker build -t $REPOSITORY_URI:latest .
+      
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push $REPOSITORY_URI:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"%s","imageUri":"%s"}]' $CONTAINER_NAME $REPOSITORY_URI:latest > imagedefinitions.json
+      - cat imagedefinitions.json
 
-post_build:
-  commands:
-    - echo Build completed on `date`
-    - echo Writing image definitions file...
-    - echo Writing image definitions file...
-    - printf '[{"name":"'nodejs-mysql-app'","imageUri":"'"${REPOSITORY_URI}:${IMAGE_TAG}"'"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
-    files: imagedefinitions.json
-      # - aws ecs update-service --cluster $ECS_CLUSTER --service $ECS_SERVICE --force-new-deployment
+  files:
+    - imagedefinitions.json
+  discard-paths: yes
